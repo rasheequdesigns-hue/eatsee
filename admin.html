@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eatsee Food Products | Administrative Control Panel</title>
+  
+  <!-- SEO & Favicon -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+  <!-- Icons & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="admin.css?v=2.0.0">
+  
+  <!-- Supabase CDN Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- --- 1. Login Shield Overlay --- -->
+  <div class="login-overlay active" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="assets/logo.svg" alt="Eatsee Logo" class="login-logo">
+        <h3>Administrative Access</h3>
+        <p>Enter credentials to access the food catalog and inquiries console.</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUser" class="form-label">Username</label>
+          <input type="text" id="loginUser" class="input-style" placeholder="e.g. admin" required autocomplete="username">
+        </div>
+        
+        <div class="form-group">
+          <label for="loginPass" class="form-label">Password</label>
+          <input type="password" id="loginPass" class="input-style" placeholder="e.g. password123" required autocomplete="current-password">
+        </div>
+        
+        <button type="submit" class="btn-submit">
+          Secure Authenticate <i class="fas fa-lock" style="margin-left: 6px;"></i>
+        </button>
+        
+        <div id="loginStatus" class="login-status"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- --- 2. Main Dashboard Layout --- -->
+  <div class="dashboard-wrapper" id="dashboardWrapper">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/logo.svg" alt="Eatsee Logo Inverted" class="sidebar-logo">
+        <span class="badge-role">ADMIN PANEL</span>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <button class="sidebar-link active" data-tab="tabOverview" id="btnTabOverview">
+          <i class="fas fa-chart-line"></i> Dashboard Home
+        </button>
+        
+        <button class="sidebar-link" data-tab="tabCatalog" id="btnTabCatalog">
+          <i class="fas fa-boxes-stacked"></i> Product Catalog
+        </button>
+        
+        <button class="sidebar-link" data-tab="tabInquiries" id="btnTabInquiries">
+          <i class="fas fa-envelope-open-text"></i> Client Inquiries
+          <span class="badge-count" id="inquiryBadge">0</span>
+        </button>
+        
+        <button class="sidebar-link" data-tab="tabSettings" id="btnTabSettings">
+          <i class="fas fa-sliders"></i> Site Settings
+        </button>
+        
+        <button class="sidebar-link" data-tab="tabStory" id="btnTabStory">
+          <i class="fas fa-book-open"></i> Brand Story
+        </button>
+        
+        <div class="sidebar-divider"></div>
+        
+        <a href="index.html" class="sidebar-link" target="_blank">
+          <i class="fas fa-globe"></i> View Main Site
+        </a>
+        
+        <button class="sidebar-link logout" id="btnLogout">
+          <i class="fas fa-sign-out-alt"></i> Secure Log Out
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="main-panel">
+      <!-- Top header bar -->
+      <header class="topbar">
+        <h2 id="pageTitle">Dashboard Home</h2>
+        <div class="profile-info">
+          <div class="profile-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div class="profile-details">
+            <h4>Eatsee Admin</h4>
+            <p>System Controller</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD OVERVIEW -->
+      <div class="tab-content active" id="tabOverview">
+        <!-- Analytics Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon green">
+              <i class="fas fa-boxes-stacked"></i>
+            </div>
+            <div class="metric-data">
+              <h3 id="statTotalProducts">0</h3>
+              <p>Total Products</p>
+            </div>
+          </div>
+          
+          <div class="metric-card">
+            <div class="metric-icon gold">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="metric-data">
+              <h3 id="statTotalInquiries">0</h3>
+              <p>Total Inquiries</p>
+            </div>
+          </div>
+          
+          <div class="metric-card">
+            <div class="metric-icon sage">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="metric-data">
+              <h3 id="statFeaturedProducts">0</h3>
+              <p>Featured Items</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-secondary-grid">
+          <!-- Recent Inquiries Section -->
+          <div class="panel-section">
+            <div class="panel-header">
+              <h3>Recent Inquiries</h3>
+              <button class="panel-header-btn" id="btnViewAllInquiries">View Inbox</button>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recentInquiriesList">
+                  <!-- JS dynamically renders rows here -->
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: var(--color-text-muted);">
+                      No client inquiries logged yet.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Category Metrics Panel -->
+          <div class="panel-section">
+            <div class="panel-header">
+              <h3>Category Metrics</h3>
+            </div>
+            <div class="category-metrics-list" id="categoryMetricsList">
+              <div class="metric-bar-item">
+                <div class="metric-bar-info">
+                  <span>Breads & Flatbreads</span>
+                  <strong id="barCountBreads">0</strong>
+                </div>
+                <div class="metric-bar-track">
+                  <div class="metric-bar-fill green" id="barFillBreads" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="metric-bar-item">
+                <div class="metric-bar-info">
+                  <span>Rice Specialists</span>
+                  <strong id="barCountRice">0</strong>
+                </div>
+                <div class="metric-bar-track">
+                  <div class="metric-bar-fill gold" id="barFillRice" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="metric-bar-item">
+                <div class="metric-bar-info">
+                  <span>Traditional Breakfast</span>
+                  <strong id="barCountBreakfast">0</strong>
+                </div>
+                <div class="metric-bar-track">
+                  <div class="metric-bar-fill sage" id="barFillBreakfast" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PRODUCTS CATALOG MANAGER -->
+      <div class="tab-content" id="tabCatalog">
+        <div class="panel-section">
+          <div class="panel-header">
+            <h3>Catalog Products</h3>
+            <div class="panel-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="prodSearch" class="input-style search-input" placeholder="Search catalog...">
+              </div>
+              <button class="btn-action primary" id="btnAddNewProduct">
+                <i class="fas fa-plus"></i> Add Product
+              </button>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Thumbnail</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th style="text-align: center;">Featured</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductsList">
+                <!-- JS renders product list here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CLIENT INQUIRIES INBOX -->
+      <div class="tab-content" id="tabInquiries">
+        <div class="panel-section">
+          <div class="panel-header">
+            <h3>Client Inquiries Inbox</h3>
+            <div class="panel-header-actions">
+              <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="inqSearch" class="input-style search-input" placeholder="Search inquiries...">
+              </div>
+              <button class="btn-action primary" id="btnRefreshInquiries" style="background-color: var(--color-primary-light);">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+              <button class="btn-action danger" id="btnClearAllInquiries">
+                <i class="fas fa-trash-can"></i> Clear All Inbox
+              </button>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Client Details</th>
+                  <th>Subject</th>
+                  <th>Message Preview</th>
+                  <th>Timestamp</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fullInquiriesList">
+                <!-- JS renders inquiries list here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: SITE DYNAMIC SETTINGS -->
+      <div class="tab-content" id="tabSettings">
+        <div class="settings-container">
+          <form id="settingsForm">
+            <!-- Form Header & Tabs -->
+            <div class="panel-section">
+              <div class="panel-header">
+                <h3>Global Website Customizations</h3>
+                <button type="submit" class="btn-action primary" id="btnSaveSettings">
+                  <i class="fas fa-floppy-disk"></i> PUSH SETTINGS LIVE
+                </button>
+              </div>
+              
+              <!-- Sub-tabs within settings -->
+              <div class="settings-subtabs">
+                <button type="button" class="subtab-btn active" data-settings-tab="setTabBrand" id="btnSetTabBrand">
+                  <i class="fas fa-globe"></i> Brand Philosophy & Hero
+                </button>
+                <button type="button" class="subtab-btn" data-settings-tab="setTabFounder" id="btnSetTabFounder">
+                  <i class="fas fa-user-tie"></i> Founder Profile
+                </button>
+                <button type="button" class="subtab-btn" data-settings-tab="setTabContact" id="btnSetTabContact">
+                  <i class="fas fa-address-card"></i> Contacts, Socials & Desk
+                </button>
+              </div>
+            </div>
+            
+            <div class="settings-panels-wrapper">
+              
+              <!-- SUB-TAB 1: BRAND & HERO BANNER -->
+              <div class="settings-panel active" id="setTabBrand">
+                <div class="panel-section">
+                  <div class="panel-section-title"><i class="fas fa-heading"></i> Main Banner & Identity</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin span-2">
+                      <label for="set_heroTitle" class="form-label-admin">Hero Main Title *</label>
+                      <input type="text" id="set_heroTitle" class="input-admin" placeholder="e.g. Bringing Authentic Traditional Taste To Your Home">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_heroDesc" class="form-label-admin">Hero Description *</label>
+                      <textarea id="set_heroDesc" class="input-admin text-area-sm" placeholder="Hero subtext explaining the brand..."></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_heroImageFile" class="form-label-admin">Hero Main Image (Upload PNG/JPG)</label>
+                      <div class="file-upload-wrapper">
+                        <input type="file" id="set_heroImageFile" class="input-admin" accept="image/png,image/jpeg,image/jpg">
+                        <input type="hidden" id="set_heroImageUrl">
+                      </div>
+                      <small id="heroImageStatus" style="color: var(--color-text-muted); font-size: 11px;">Recommended size: 600x400px. Current: No custom image uploaded.</small>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="panel-section" style="margin-top: 24px;">
+                  <div class="panel-section-title"><i class="fas fa-quote-left"></i> Brand Philosophy Details</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin span-2">
+                      <label for="set_visionDesc" class="form-label-admin">Our Vision Description *</label>
+                      <textarea id="set_visionDesc" class="input-admin text-area-sm"></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_missionDesc" class="form-label-admin">Our Mission Description *</label>
+                      <textarea id="set_missionDesc" class="input-admin text-area-sm"></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_standardsDesc" class="form-label-admin">Purity Standards Description *</label>
+                      <textarea id="set_standardsDesc" class="input-admin text-area-sm"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel-section" style="margin-top: 24px;">
+                  <div class="panel-section-title"><i class="fas fa-book-open"></i> Brand Journey Section Heading</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin span-2">
+                      <label for="set_journeyTag" class="form-label-admin">Section Tag (e.g. Brand Chronicle) *</label>
+                      <input type="text" id="set_journeyTag" class="input-admin" placeholder="e.g. Brand Chronicle">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_journeyTitle" class="form-label-admin">Section Title (e.g. The Eatsee Brand Journey) *</label>
+                      <input type="text" id="set_journeyTitle" class="input-admin" placeholder="e.g. The Eatsee Brand Journey">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_journeyDesc" class="form-label-admin">Journey Section Description *</label>
+                      <textarea id="set_journeyDesc" class="input-admin text-area-sm"></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_storyMusicFile" class="form-label-admin">Brand Story Background Music (Upload MP3/OGG)</label>
+                      <div class="file-upload-wrapper">
+                        <input type="file" id="set_storyMusicFile" class="input-admin" accept="audio/mp3,audio/mpeg,audio/ogg">
+                        <input type="hidden" id="set_storyMusicUrl">
+                      </div>
+                      <small id="musicStatus" style="color: var(--color-text-muted); font-size: 11px;">Max size 5MB recommended. Current: No file uploaded.</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- SUB-TAB 2: FOUNDER STORY PROFILE -->
+              <div class="settings-panel" id="setTabFounder">
+                <div class="panel-section">
+                  <div class="panel-section-title"><i class="fas fa-user"></i> Mr. Satheeshan's Profile</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin">
+                      <label for="set_founderName" class="form-label-admin">Founder Name *</label>
+                      <input type="text" id="set_founderName" class="input-admin" placeholder="e.g. Mr. Satheeshan">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_founderTitle" class="form-label-admin">Founder Title *</label>
+                      <input type="text" id="set_founderTitle" class="input-admin" placeholder="e.g. Founder, Eatsee Food Products">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_founderQuote" class="form-label-admin">Founder Inspirational Quote *</label>
+                      <textarea id="set_founderQuote" class="input-admin text-area-sm" placeholder="Inspirational quote of the founder..."></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_founderPhoto" class="form-label-admin">Founder Photo URL (Optional - leave blank for quote-only box)</label>
+                      <input type="text" id="set_founderPhoto" class="input-admin" placeholder="e.g. https://... or data:image...">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_founderStoryP1" class="form-label-admin">Biography Paragraph 1 *</label>
+                      <textarea id="set_founderStoryP1" class="input-admin text-area-sm"></textarea>
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_founderStoryP2" class="form-label-admin">Biography Paragraph 2 *</label>
+                      <textarea id="set_founderStoryP2" class="input-admin text-area-sm"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- SUB-TAB 3: CONTACTS & SALES ONLINE STATUS -->
+              <div class="settings-panel" id="setTabContact">
+                <div class="panel-section">
+                  <div class="panel-section-title"><i class="fas fa-address-book"></i> Communication Channels</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin">
+                      <label for="set_contactPhone" class="form-label-admin">Inquiry Phone Number *</label>
+                      <input type="text" id="set_contactPhone" class="input-admin" placeholder="e.g. +91 98765 43210">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_contactEmail" class="form-label-admin">Inquiry Email Address *</label>
+                      <input type="email" id="set_contactEmail" class="input-admin" placeholder="e.g. inquiry@eatseefoods.com">
+                    </div>
+                    <div class="form-group-admin span-2">
+                      <label for="set_contactAddress" class="form-label-admin">Physical Office Address *</label>
+                      <input type="text" id="set_contactAddress" class="input-admin" placeholder="Enter physical street / industrial block address...">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_hoursWeekdays" class="form-label-admin">Weekday Hours *</label>
+                      <input type="text" id="set_hoursWeekdays" class="input-admin" placeholder="e.g. Monday - Saturday: 08:00 AM - 06:00 PM">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_hoursWeekends" class="form-label-admin">Weekend Hours *</label>
+                      <input type="text" id="set_hoursWeekends" class="input-admin" placeholder="e.g. Sunday: Closed">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="panel-section" style="margin-top: 24px;">
+                  <div class="panel-section-title"><i class="fas fa-wifi"></i> Online Sales Desk & Social Networks</div>
+                  <div class="form-grid-admin">
+                    <div class="form-group-admin">
+                      <label for="set_salesStatus" class="form-label-admin">Real-time Sales Desk Status *</label>
+                      <select id="set_salesStatus" class="input-admin">
+                        <option value="online">Online / Active</option>
+                        <option value="offline">Offline</option>
+                        <option value="busy">Busy / High Traffic</option>
+                      </select>
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_socialFacebook" class="form-label-admin">Facebook Page URL</label>
+                      <input type="text" id="set_socialFacebook" class="input-admin" placeholder="e.g. https://facebook.com/eatsee">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_socialInstagram" class="form-label-admin">Instagram Handle URL</label>
+                      <input type="text" id="set_socialInstagram" class="input-admin" placeholder="e.g. https://instagram.com/eatsee">
+                    </div>
+                    <div class="form-group-admin">
+                      <label for="set_socialWhatsapp" class="form-label-admin">WhatsApp Number / Link</label>
+                      <input type="text" id="set_socialWhatsapp" class="input-admin" placeholder="e.g. https://wa.me/91XXXXXXXXXX">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 5: BRAND STORY -->
+      <div class="tab-content" id="tabStory">
+        <div class="panel-section">
+          <div class="panel-header">
+            <h3>Manage Brand Chronicle Chapters</h3>
+            <button class="btn-action primary" id="btnAddNewStory">
+              <i class="fas fa-plus"></i> Add New Chapter
+            </button>
+          </div>
+          
+          <!-- New Grid-based Story Chapters Layout -->
+          <div class="story-chapters-grid" id="storyTableBody">
+            <!-- Javascript will render chapters as cards here -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- --- 3. Dynamic Product Editor Modal --- -->
+  <div class="modal-overlay" id="editorModal">
+    <div class="modal-frame">
+      <div class="modal-header">
+        <h3 id="editorModalTitle">Add New Product</h3>
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" form="productForm" class="btn-save" style="padding: 8px 20px;">Save</button>
+          <button class="modal-close" id="btnCancelEditor"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      
+      <!-- Premium Modal Tab Bar -->
+      <div class="modal-form-tabs" style="display: none;">
+        <button type="button" class="form-tab-btn active" data-form-tab="formTabBasic" id="btnFormTabBasic">
+          <i class="fas fa-info-circle"></i> Basic Specifications
+        </button>
+      </div>
+      
+      <form id="productForm">
+        <input type="hidden" id="editProductId">
+        
+        <div class="modal-body-scroll">
+          
+          <!-- TAB PANEL 1: BASIC INFO -->
+          <div class="form-tab-panel active" id="formTabBasic">
+            <div class="form-grid-admin">
+              <div class="form-group-admin span-2">
+                <label for="prodName" class="form-label-admin">Product Name *</label>
+                <input type="text" id="prodName" class="input-admin" placeholder="e.g. Classic Malabar Porotta">
+              </div>
+              
+              <div class="form-group-admin">
+                <label for="prodCategory" class="form-label-admin">Category *</label>
+                <input type="text" id="prodCategory" class="input-admin" list="categoryList" placeholder="Select or type a new category...">
+                <datalist id="categoryList">
+                  <!-- Dynamic categories will be loaded here -->
+                </datalist>
+              </div>
+              
+              <div class="form-group-admin">
+                <label for="prodTagline" class="form-label-admin">Short Tagline *</label>
+                <input type="text" id="prodTagline" class="input-admin" placeholder="e.g. Flaky, multi-layered golden perfection.">
+              </div>
+              
+              <div class="form-group-admin span-2">
+                <label for="prodDesc" class="form-label-admin">Detailed Description *</label>
+                <textarea id="prodDesc" class="input-admin text-area" placeholder="Enter a comprehensive product description..."></textarea>
+              </div>
+              
+              <div class="form-group-admin">
+                <label for="prodImage" class="form-label-admin">Product Image URL / Path *</label>
+                <input type="text" id="prodImage" class="input-admin" placeholder="e.g. assets/products/porotta.png or https://...">
+              </div>
+ 
+              <div class="form-group-admin span-2">
+                <label for="prodIngredients" class="form-label-admin">Core Ingredients *</label>
+                <input type="text" id="prodIngredients" class="input-admin" placeholder="e.g. Premium Wheat Flour, Purified Water, Milk, Vegetable Fat, Salt">
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="btnCancelEditor2">Cancel</button>
+          <button type="submit" class="btn-save" id="btnSaveProduct">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- --- Story Chapter Editor Modal --- -->
+  <div class="modal-overlay" id="storyEditorModal">
+    <div class="modal-frame form-modal">
+      <div class="modal-header">
+        <h3 id="storyEditorTitle">Add New Chapter</h3>
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" form="storyForm" class="btn-save" style="padding: 8px 20px;">Save</button>
+          <button class="modal-close" id="btnCancelStoryHeader"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      
+      <form id="storyForm">
+        <input type="hidden" id="storyId">
+        
+        <div class="modal-body-scroll">
+          <div class="form-grid-admin">
+            <div class="form-group-admin">
+              <label for="storySort" class="form-label-admin">Sort Number (1, 2, 3...) *</label>
+              <input type="number" id="storySort" class="input-admin" placeholder="e.g. 1">
+            </div>
+            
+            <div class="form-group-admin">
+              <label for="storySubtitle" class="form-label-admin">Subtitle (e.g., Chapter I) *</label>
+              <input type="text" id="storySubtitle" class="input-admin" placeholder="e.g. Chapter I: The Vision">
+            </div>
+            
+            <div class="form-group-admin span-2">
+              <label for="storyHeading" class="form-label-admin">Main Heading *</label>
+              <input type="text" id="storyHeading" class="input-admin" placeholder="e.g. Our Pioneer's Dream">
+            </div>
+            
+            <div class="form-group-admin span-2">
+              <label for="storyImage" class="form-label-admin">Image URL (Visual Stage) *</label>
+              <input type="text" id="storyImage" class="input-admin" placeholder="https://...">
+            </div>
+            
+            <div class="form-group-admin span-2">
+              <label for="storyPara1" class="form-label-admin">Paragraph 1 *</label>
+              <textarea id="storyPara1" class="input-admin" rows="4" placeholder="Body text..."></textarea>
+            </div>
+            
+            <div class="form-group-admin span-2">
+              <label for="storyPara2" class="form-label-admin">Paragraph 2 (Optional)</label>
+              <textarea id="storyPara2" class="input-admin" rows="4" placeholder="Additional text..."></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="btnCancelStory">Cancel</button>
+          <button type="submit" class="btn-save" id="btnSaveStory">Save Chapter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- --- 4. Custom Toast Notification Container --- -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- --- 4. Interactive Inquiry Reader Modal --- -->
+  <div class="modal-overlay" id="inquiryReaderModal">
+    <div class="modal-frame reader-modal">
+      <div class="modal-header">
+        <h3>Wholesale Inquiry Message</h3>
+        <button class="modal-close" id="btnCloseReader"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div class="modal-body-scroll">
+        <div class="inquiry-sheet">
+          <div class="sheet-meta-grid">
+            <div class="sheet-meta-item">
+              <strong>Client Name:</strong>
+              <p id="readName">John Doe</p>
+            </div>
+            <div class="sheet-meta-item">
+              <strong>Email:</strong>
+              <p id="readEmail">john@example.com</p>
+            </div>
+            <div class="sheet-meta-item">
+              <strong>Phone:</strong>
+              <p id="readPhone">+91 99955 88811</p>
+            </div>
+            <div class="sheet-meta-item">
+              <strong>Subject:</strong>
+              <p id="readSubject">Retail Placement</p>
+            </div>
+            <div class="sheet-meta-item span-2">
+              <strong>Logged Date:</strong>
+              <p id="readDate">20-05-2026 09:40 AM</p>
+            </div>
+          </div>
+          
+          <div class="sheet-message">
+            <strong>Full Inquiry Message:</strong>
+            <p id="readMessage">Detailed message body...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btnCloseReader2">Close Message</button>
+        <button class="btn-delete" id="btnDeleteInquiry">Delete Message</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js?v=2.0.0"></script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Eatsee Food Products | Premium Pre-cooked & Packed Foods</title>
+  <meta name="title" content="Eatsee Food Products | Premium Pre-cooked & Packed Foods">
+  <meta name="description" content="Discover Eatsee Food Products - bringing you the finest pre-cooked, preservative-free, vacuum-packed traditional Malabar Porotta, Chappathi, Pathiri, and Noolputtu. Authentic taste, ready in minutes.">
+  <meta name="keywords" content="Eatsee, food products, pre-cooked food, packed food, Malabar Porotta, Chappathi, Pathiri, Noolputtu, Idiyappam, Vellayappam, Kerala food brand">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://eatseefoods.com/">
+  <meta property="og:title" content="Eatsee Food Products | Premium Pre-cooked & Packed Foods">
+  <meta property="og:description" content="Experience authentic traditional taste with Eatsee's premium range of pre-cooked, ready-to-heat Porotta, Chappathi, Pathiri, and more. Crafted with hygiene and love.">
+  <meta property="og:image" content="assets/logo.svg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Eatsee Food Products | Premium Pre-cooked & Packed Foods">
+  <meta property="twitter:description" content="Authentic traditional breads, steamed and flaky, cooked under highest hygiene standards. Ready to eat in seconds.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css?v=2.0.0">
+  
+  <!-- --- Audio for Brand Story --- -->
+  <audio id="storyAudio" loop preload="auto"></audio>
+
+  <!-- Supabase CDN Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- --- 1. Premium Glassmorphic Header --- -->
+  <header class="header" id="header">
+    <div class="container nav-wrapper">
+      <a href="#home" class="logo-link" id="logoLink">
+        <img src="assets/logo.svg" alt="Eatsee Food Products Logo" class="logo-img">
+      </a>
+      
+      <!-- Nav Links -->
+      <nav class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link active" id="navLinkHome">Home</a>
+        <a href="#brand-journey" class="nav-link" id="navLinkAbout">Our Story</a>
+        <a href="#founder" class="nav-link" id="navLinkFounder">Founder</a>
+        <a href="#products" class="nav-link" id="navLinkProducts">Products</a>
+        <a href="#contact" class="nav-link" id="navLinkContact">Contact Us</a>
+        <a href="#contact" class="nav-cta" id="navCtaInquire">Wholesale Inquiry</a>
+      </nav>
+
+      <!-- Hamburger Menu Toggle (Mobile) -->
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- --- 2. Hero Section --- -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag" id="heroTag">
+            <i class="fas fa-star"></i> 100% Traditional & Preservative-Free
+          </div>
+          <h1 class="hero-title" id="heroTitle">
+            Bringing Authentic <br><span>Traditional Taste</span><br> To Your Home
+          </h1>
+          <p class="hero-desc" id="heroDesc">
+            We produce premium, pre-cooked, and vacuum-packed food items like Malabar Porotta, soft Chappathi, snow-white Pathiri, and delicate Noolputtu. Pure ingredients, pristine hygiene, ready to serve in seconds.
+          </p>
+          <div class="hero-ctas">
+            <a href="#products" class="btn btn-primary" id="heroBtnExplore">
+              Explore Our Range <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#contact" class="btn btn-secondary" id="heroBtnContact">
+              Get in Touch
+            </a>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="hero-ring hero-ring-1"></div>
+          <div class="hero-ring hero-ring-2"></div>
+          <div class="hero-main-img-wrapper">
+            <img src="assets/logo.svg" alt="Eatsee Food Products" class="hero-main-img" id="heroMainImage" style="max-height: 280px; object-fit: contain; padding: 30px;">
+          </div>
+          
+          <!-- Decorative Floating Card -->
+          <div class="hero-decor-badge">
+            <div class="badge-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="badge-content">
+              <h4>100% Freshness</h4>
+              <p>Vacuum sealed packed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- 3. Brand Identity (Vision, Mission & Quality) --- -->
+  <section class="section section-light" id="about">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Brand Philosophy</span>
+        <h2 class="section-title">Our Vision, Mission & Standards</h2>
+        <p class="section-desc">At Eatsee, we believe that food is not just sustenance; it is a rich heritage of flavor, texture, and communal warmth.</p>
+      </div>
+      
+      <div class="identity-grid">
+        <!-- Vision Card -->
+        <div class="identity-card reveal">
+          <div class="identity-icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <h3>Our Vision</h3>
+          <p id="visionDesc">To be the most trusted global ambassador of traditional Indian flatbreads and delicacies, integrating convenience with natural organic goodness and authentic legacy flavors.</p>
+        </div>
+
+        <!-- Mission Card -->
+        <div class="identity-card reveal">
+          <div class="identity-icon">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h3>Our Mission</h3>
+          <p id="missionDesc">To craft premium-quality, pre-cooked food products using traditional recipes and pristine hygiene standards, ensuring families can relish authentic culinary heritage within minutes.</p>
+        </div>
+
+        <!-- Standard Card -->
+        <div class="identity-card reveal">
+          <div class="identity-icon">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <h3>Purity Standards</h3>
+          <p id="standardsDesc">We pledge zero artificial preservatives, zero food coloring, and zero MSG. Every single packet is sealed using food-grade vacuum systems that locks in natural flavor, nutrition, and moisture.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- Founder Profile Section --- -->
+  <section class="section section-light reveal" id="founder">
+    <div class="container">
+      <div class="founder-grid">
+        <div class="founder-visual" id="storyVisualSlot">
+          <!-- JS dynamic content (Photo or Quote) populated by applySiteSettings in app.js -->
+        </div>
+        <div class="founder-content">
+          <span class="section-tag">Our Leadership</span>
+          <h2 class="founder-name" id="founderName">Mr. Satheeshan</h2>
+          <p class="founder-title" id="founderTitle">Founder, Eatsee Food Products</p>
+          
+          <div class="founder-story">
+            <p class="founder-p" id="founderStoryP1"></p>
+            <p class="founder-p" id="founderStoryP2"></p>
+          </div>
+          
+          <div class="founder-quote-box-mobile" id="founderQuoteMobileContainer" style="display: none;">
+             <p class="founder-quote-mobile" id="founderQuoteMobile"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- 4. Dynamic Products catalog Section --- -->
+  <section class="section" id="products">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Our Products</span>
+        <h2 class="section-title">Delicacies Steamed & Packaged</h2>
+        <p class="section-desc">Carefully rolled, cooked, and sealed to lock in freshness. Explore our catalog below to see packaging sizes, nutrition facts, and storage instructions.</p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="catalog-controls reveal" id="categoryFilterContainer">
+        <!-- Dynamic category tabs will be rendered here -->
+      </div>
+
+      <!-- Catalog Dynamic Grid -->
+      <div class="products-grid" id="productsGrid">
+        <!-- JS renders cards here -->
+        <div class="form-message success" style="grid-column: 1/-1; text-align: center;">
+          <i class="fas fa-spinner fa-spin"></i> Preparing delicious showcase items...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- 5. Brand Story Journey Slideshow Carousel Section --- -->
+  <section class="section section-light" id="brand-journey">
+    <div class="story-sticky-wrapper">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" id="journeyTag">Brand Chronicle</span>
+          <h2 class="section-title" id="journeyTitle">The Eatsee Brand Journey</h2>
+          <p class="section-desc" id="journeyDesc">Experience the passion, pure standards, and culinary heritage behind every Eatsee recipe through our interactive chronicle.</p>
+        </div>
+
+        <div class="story-carousel-grid">
+          <!-- Left Column: Visual Showcase Stage -->
+          <div class="story-visual-stage" id="storyVisualStage">
+            <!-- JS dynamic content rendered here -->
+            <div class="form-message success" style="text-align: center;">
+              <i class="fas fa-spinner fa-spin"></i> Loading chapters...
+            </div>
+          </div>
+          
+          <!-- Right Column: Interactive Story Content -->
+          <div class="story-content-console">
+            <div class="story-header-meta">
+              <span class="story-chapter-tag" id="storyChapterTag">CHAPTER - / -</span>
+              <div class="story-progress-bar">
+                <div class="story-progress-bar-fill" id="storyProgressBarFill"></div>
+              </div>
+            </div>
+
+            <div class="story-content-slides" id="storyContentSlides">
+              <!-- JS dynamic slides rendered here -->
+            </div>
+
+            <!-- Bottom Control Bar -->
+            <div class="story-carousel-controls">
+              <div class="story-carousel-dots" id="storyCarouselDots">
+                <!-- JS dynamic dots rendered here -->
+              </div>
+              
+              <div class="story-carousel-navigation">
+                <button class="story-control-btn" id="storyBtnPrev" aria-label="Previous Slide">
+                  <i class="fas fa-arrow-left"></i>
+                </button>
+                
+                <button class="story-control-btn" id="storyBtnNext" aria-label="Next Slide">
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- 6. Contact Inquiries & Database sync section --- -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Get In Touch</span>
+        <h2 class="section-title">Wholesale & Inquiry Desk</h2>
+        <p class="section-desc">Interested in distributing Eatsee products or placing bulk corporate/event orders? Fill out the form below, and our brand desk will reach out immediately.</p>
+      </div>
+
+      <div class="contact-wrapper">
+        <!-- Brand Information Card -->
+        <div class="contact-info reveal">
+          <div class="contact-info-header">
+            <h3>Eatsee Desk</h3>
+            <p>Connect with our food specialists for retail placements, stockist availability, or distribution partnership inquiries.</p>
+          </div>
+          
+          <div class="contact-channels">
+            <!-- Channel Phone -->
+            <div class="contact-channel-item">
+              <div class="channel-icon">
+                <i class="fas fa-phone-volume"></i>
+              </div>
+              <div class="channel-details">
+                <h5>Call Inquiry</h5>
+                <p id="contactPhone">+91 98765 43210</p>
+              </div>
+            </div>
+
+            <!-- Channel Email -->
+            <div class="contact-channel-item">
+              <div class="channel-icon">
+                <i class="fas fa-envelope-open-text"></i>
+              </div>
+              <div class="channel-details">
+                <h5>Email Us</h5>
+                <p id="contactEmail">inquiry@eatseefoods.com</p>
+              </div>
+            </div>
+
+            <!-- Channel Address -->
+            <div class="contact-channel-item">
+              <div class="channel-icon">
+                <i class="fas fa-map-location-dot"></i>
+              </div>
+              <div class="channel-details">
+                <h5>Our Office</h5>
+                <p id="contactAddress">Eatsee Food Products Industrial Area, Calicut, Kerala, India</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn" id="socialFacebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" id="socialInstagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" id="socialWhatsapp" aria-label="Whatsapp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Message Form Card -->
+        <div class="contact-card reveal">
+          <div class="form-header">
+            <h4>Send Us A Message</h4>
+            <p>Your request will be directly logged into our sales desk database.</p>
+          </div>
+
+          <form id="contactForm" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="formName" class="form-label">Full Name *</label>
+                <input type="text" id="formName" class="input-style" placeholder="e.g. John Doe" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="formEmail" class="form-label">Email Address *</label>
+                <input type="email" id="formEmail" class="input-style" placeholder="e.g. john@example.com" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="formPhone" class="form-label">Phone Number</label>
+                <input type="tel" id="formPhone" class="input-style" placeholder="e.g. +91 99955 88811">
+              </div>
+
+              <div class="form-group">
+                <label for="formSubject" class="form-label">Inquiry Subject</label>
+                <select id="formSubject" class="input-style">
+                  <option value="distribution">Retail Distribution Partnership</option>
+                  <option value="wholesale">Wholesale Bulk Order</option>
+                  <option value="feedback">Product Feedback</option>
+                  <option value="other">Other Inquiry</option>
+                </select>
+              </div>
+
+              <div class="form-group-full">
+                <label for="formMessage" class="form-label">Message / Details *</label>
+                <textarea id="formMessage" class="input-style" placeholder="Tell us more about your distribution region or product requirement..." required></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="form-submit-btn" id="formSubmitBtn">
+              Submit Inquiry <i class="fas fa-paper-plane" style="margin-left: 6px;"></i>
+            </button>
+
+            <div id="formStatus" class="form-message"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- 7. Interactive Detail Modal (Overlaid on screen) --- -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-frame">
+      <button class="modal-close-btn" id="modalClose" aria-label="Close Product Details">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="modal-layout">
+        <!-- Modal Left (Image) -->
+        <div class="modal-left">
+          <img src="" alt="" class="modal-showcase-img" id="modalImage">
+          <span class="modal-badge" id="modalBadge">PRE-COOKED</span>
+        </div>
+        
+        <!-- Modal Right (Data info sheet) -->
+        <div class="modal-right">
+          <div class="modal-header">
+            <h2 id="modalTitle">Product Title</h2>
+            <p class="modal-tagline" id="modalTagline">Product Tagline</p>
+          </div>
+          
+          <p class="modal-desc" id="modalDesc">Detailed product description...</p>
+          
+          <div class="info-row">
+            <h4><i class="fas fa-wheat-awn"></i> Core Ingredients</h4>
+            <p id="modalIngredients">Refined flour, water, milk, salt...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- 8. Footer Section --- -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="assets/logo.svg" alt="Eatsee Logo Inverted" class="footer-brand-logo" id="footerBrandLogo">
+          <p id="footerBrandText">Crafting high-quality, preservative-free traditional flatbreads so that you can enjoy fresh, fluffy, flaky homemade delicacies ready to serve in seconds.</p>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Navigation</h4>
+          <ul class="footer-links-list">
+            <li class="footer-link-item"><a href="#home">Home</a></li>
+            <li class="footer-link-item"><a href="#about">Our Story</a></li>
+            <li class="footer-link-item"><a href="#products">Our Products</a></li>
+            <li class="footer-link-item"><a href="#contact">Contact Inquiry</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-hours">
+          <h4>Office & Desk Hours</h4>
+          <div class="footer-hours-list">
+            <p id="footerHoursWeekday">Monday - Saturday: <span>08:00 AM - 06:00 PM</span></p>
+            <p id="footerHoursSunday">Sunday: <span>Closed</span></p>
+            <p id="footerSalesStatusRow">Sales Desk Status: <span id="footerSalesStatus" style="color: #66BB6A; font-weight: bold;"><i class="fas fa-circle" style="font-size: 10px; margin-right: 4px;"></i> Online</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          &copy; 2026 Eatsee Food Products. All rights reserved. <a href="#">Privacy Policy</a> <a href="#">Terms of Service</a>
+        </div>
+        <div class="footer-credit">
+          Designed with ❤️ for Eatsee Food Products.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js?v=2.0.0"></script>
+</body>
+</html>
