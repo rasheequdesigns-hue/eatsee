@@ -423,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .from('site_settings')
         .select('*')
         .eq('key', 'site_content')
+        .order('id', { ascending: false })
         .limit(1);
         
       if (error) {
@@ -430,7 +431,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       if (data && data.length > 0 && data[0].value) {
-        applySiteSettings(data[0].value);
+        let settingsPayload = data[0].value;
+        if (typeof settingsPayload === 'string') {
+          try {
+            settingsPayload = JSON.parse(settingsPayload);
+          } catch (parseError) {
+            console.warn('Site settings payload is not valid JSON:', parseError);
+          }
+        }
+
+        applySiteSettings(
+          settingsPayload && typeof settingsPayload === 'object' ? settingsPayload : {}
+        );
       } else {
         console.log('No custom site settings found. Applying blank state.');
         applySiteSettings({});
@@ -445,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return {
       heroTitle: 'Bringing Authentic Traditional Taste To Your Home',
       heroDesc: 'We produce premium, pre-cooked, and vacuum-packed food items like Malabar Porotta, soft Chappathi, snow-white Pathiri, and delicate Noolputtu. Pure ingredients, pristine hygiene, ready to serve in seconds.',
+      heroImageUrl: '',
       logoUrl: 'assets/logo.svg',
       brandVision: 'To be the most trusted global ambassador of traditional Indian flatbreads and delicacies, integrating convenience with natural organic goodness and authentic legacy flavors.',
       brandMission: 'To craft premium-quality, pre-cooked food products using traditional recipes and pristine hygiene standards, ensuring families can relish authentic culinary heritage within minutes.',
@@ -453,12 +466,6 @@ document.addEventListener('DOMContentLoaded', () => {
       journeyTitle: 'The Eatsee Brand Journey',
       journeyDesc: 'Experience the passion, pure standards, and culinary heritage behind every Eatsee recipe through our interactive chronicle.',
       storyMusicUrl: '',
-      founderName: 'Mr. Satheeshan',
-      founderTitle: 'Founder, Eatsee Food Products',
-      founderQuote: 'We wanted to preserve the delicate art of making traditional flatbreads so that no family ever has to compromise on authentic taste and purity for the sake of convenience.',
-      founderPhoto: '',
-      founderStoryP1: 'Founded with a passionate drive to make premium, healthy, home-style traditional breads accessible, Eatsee Food Products has grown from a humble home recipe testing setup into a state-of-the-art packaging kitchen under the steering direction of Mr. Satheeshan.',
-      founderStoryP2: 'Recognizing the hectic nature of modern life, our team perfected the art of pre-cooking delicate breads like flaky Porottas, paper-thin Pathiris, and steamed Noolputtus without using chemicals or artificial additives. We select only locally sourced premium flour and rice grains to produce meals that feel like they were made by your mother.',
       contactPhone: '+91 98765 43210',
       contactEmail: 'inquiry@eatseefoods.com',
       contactAddress: 'Eatsee Food Products Industrial Area, Calicut, Kerala, India',
@@ -472,7 +479,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const applySiteSettings = (settings) => {
-    if (!settings) return;
+    const defaults = getDefaultSiteSettings();
+    if (!settings) settings = {};
+    const safeSettings = Object.keys(defaults).reduce((acc, key) => {
+      const value = settings[key];
+      acc[key] = value !== undefined && value !== null && value !== '' ? value : defaults[key];
+      return acc;
+    }, {});
     
     // Brand & Hero
     const heroTitleEl = document.getElementById('heroTitle');
@@ -483,94 +496,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const standardsDescEl = document.getElementById('standardsDesc');
     
     if (heroTitleEl) {
-      const formattedTitle = settings.heroTitle.replace('Traditional Taste', '<span>Traditional Taste</span>');
+      const formattedTitle = safeSettings.heroTitle.replace('Traditional Taste', '<span>Traditional Taste</span>');
       heroTitleEl.innerHTML = formattedTitle;
     }
-    if (heroDescEl) heroDescEl.textContent = settings.heroDesc;
-    if (heroMainImage && settings.heroImageUrl) {
-      heroMainImage.src = settings.heroImageUrl;
+    if (heroDescEl) heroDescEl.textContent = safeSettings.heroDesc;
+    if (heroMainImage && safeSettings.heroImageUrl) {
+      heroMainImage.src = safeSettings.heroImageUrl;
     }
-    if (visionDescEl) visionDescEl.textContent = settings.brandVision;
-    if (missionDescEl) missionDescEl.textContent = settings.brandMission;
-    if (standardsDescEl) standardsDescEl.textContent = settings.purityStandards;
+    if (visionDescEl) visionDescEl.textContent = safeSettings.brandVision;
+    if (missionDescEl) missionDescEl.textContent = safeSettings.brandMission;
+    if (standardsDescEl) standardsDescEl.textContent = safeSettings.purityStandards;
 
     // Brand Journey Section Header
     const journeyTagEl = document.getElementById('journeyTag');
     const journeyTitleEl = document.getElementById('journeyTitle');
     const journeyDescEl = document.getElementById('journeyDesc');
 
-    if (journeyTagEl) journeyTagEl.textContent = settings.journeyTag || 'Brand Chronicle';
-    if (journeyTitleEl) journeyTitleEl.textContent = settings.journeyTitle || 'The Eatsee Brand Journey';
-    if (journeyDescEl) journeyDescEl.textContent = settings.journeyDesc || 'Experience the passion, pure standards, and culinary heritage behind every Eatsee recipe through our interactive chronicle.';
+    if (journeyTagEl) journeyTagEl.textContent = safeSettings.journeyTag;
+    if (journeyTitleEl) journeyTitleEl.textContent = safeSettings.journeyTitle;
+    if (journeyDescEl) journeyDescEl.textContent = safeSettings.journeyDesc;
 
     // Story Audio setup
     const storyAudio = document.getElementById('storyAudio');
-    if (storyAudio && settings.storyMusicUrl) {
-      storyAudio.src = settings.storyMusicUrl;
+    if (storyAudio && safeSettings.storyMusicUrl) {
+      storyAudio.src = safeSettings.storyMusicUrl;
       storyAudio.load(); // Force immediate load of the Base64/URL data
     }
     
     // Update logo URLs if present
     const logoImgs = document.querySelectorAll('.logo-img, .footer-brand-logo, .login-logo, .sidebar-logo');
     logoImgs.forEach(img => {
-      img.src = settings.logoUrl || 'assets/logo.svg';
+      img.src = safeSettings.logoUrl;
     });
-    
-    // Founder Details
-    const founderNameEl = document.getElementById('founderName');
-    const founderTitleEl = document.getElementById('founderTitle');
-    const founderQuoteEl = document.getElementById('founderQuote');
-    const founderStoryP1El = document.getElementById('founderStoryP1');
-    const founderStoryP2El = document.getElementById('founderStoryP2');
-    const storyVisualSlot = document.getElementById('storyVisualSlot');
-    const founderQuoteMobile = document.getElementById('founderQuoteMobile');
-    const founderQuoteMobileContainer = document.getElementById('founderQuoteMobileContainer');
-    
-    if (founderNameEl) founderNameEl.textContent = settings.founderName;
-    if (founderTitleEl) founderTitleEl.textContent = settings.founderTitle;
-    
-    const cleanQuote = settings.founderQuote ? `"${settings.founderQuote.replace(/^"+|"+$/g, '')}"` : '';
-    if (founderQuoteEl) founderQuoteEl.textContent = cleanQuote;
-    if (founderQuoteMobile) founderQuoteMobile.textContent = cleanQuote;
-    
-    if (founderStoryP1El) {
-      let p1 = settings.founderStoryP1 || '';
-      p1 = p1.replace(/\*\*Eatsee Food Products\*\*/g, '<strong>Eatsee Food Products</strong>');
-      p1 = p1.replace(/\*\*Mr\. Satheeshan\*\*/g, '<strong>Mr. Satheeshan</strong>');
-      founderStoryP1El.innerHTML = p1;
-    }
-    if (founderStoryP2El) founderStoryP2El.textContent = settings.founderStoryP2 || '';
-    
-    if (storyVisualSlot) {
-      if (settings.founderPhoto) {
-        storyVisualSlot.innerHTML = `
-          <div class="founder-photo-wrapper">
-            <img src="${settings.founderPhoto}" alt="${settings.founderName}" class="founder-img">
-            <div class="founder-badge"><i class="fas fa-award"></i> ${settings.founderName}</div>
-          </div>
-        `;
-        storyVisualSlot.classList.add('story-visual', 'has-photo');
-        if (founderQuoteMobileContainer) founderQuoteMobileContainer.classList.add('active');
-      } else {
-        storyVisualSlot.innerHTML = `
-          <div class="story-quote-box">
-            <div class="quote-header">
-              <span class="quote-mark">“</span>
-              <div class="gold-badge"><i class="fas fa-award"></i> Pioneer's Standard</div>
-            </div>
-            <p class="quote-body" id="founderQuote">${cleanQuote}</p>
-            <div class="quote-signature">
-              <div class="sig-line"></div>
-              <h4 id="founderName">${settings.founderName}</h4>
-              <p class="sig-title" id="founderTitle">${settings.founderTitle}</p>
-            </div>
-          </div>
-        `;
-        storyVisualSlot.classList.remove('has-photo');
-        storyVisualSlot.classList.add('story-visual');
-        if (founderQuoteMobileContainer) founderQuoteMobileContainer.classList.remove('active');
-      }
-    }
     
     // Contacts & Sales Desk
     const contactPhoneEl = document.getElementById('contactPhone');
@@ -580,25 +537,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerHoursSundayEl = document.getElementById('footerHoursSunday');
     const footerSalesStatusEl = document.getElementById('footerSalesStatus');
     
-    if (contactPhoneEl) contactPhoneEl.textContent = settings.contactPhone;
-    if (contactEmailEl) contactEmailEl.textContent = settings.contactEmail;
-    if (contactAddressEl) contactAddressEl.textContent = settings.contactAddress;
+    if (contactPhoneEl) contactPhoneEl.textContent = safeSettings.contactPhone;
+    if (contactEmailEl) contactEmailEl.textContent = safeSettings.contactEmail;
+    if (contactAddressEl) contactAddressEl.textContent = safeSettings.contactAddress;
     
     if (footerHoursWeekdayEl) {
-      footerHoursWeekdayEl.innerHTML = `Monday - Saturday: <span>${settings.officeHoursWeekday.replace(/Monday\s*-\s*Saturday:\s*/gi, '')}</span>`;
+      footerHoursWeekdayEl.innerHTML = `Monday - Saturday: <span>${safeSettings.officeHoursWeekday.replace(/Monday\s*-\s*Saturday:\s*/gi, '')}</span>`;
     }
     if (footerHoursSundayEl) {
-      footerHoursSundayEl.innerHTML = `Sunday: <span>${settings.officeHoursSunday.replace(/Sunday:\s*/gi, '')}</span>`;
+      footerHoursSundayEl.innerHTML = `Sunday: <span>${safeSettings.officeHoursSunday.replace(/Sunday:\s*/gi, '')}</span>`;
     }
     
     if (footerSalesStatusEl) {
       let statusColor = '#66BB6A';
       let statusText = 'Online';
       
-      if (settings.salesDeskStatus === 'offline') {
+      if (safeSettings.salesDeskStatus === 'offline') {
         statusColor = '#EF5350';
         statusText = 'Offline';
-      } else if (settings.salesDeskStatus === 'busy') {
+      } else if (safeSettings.salesDeskStatus === 'busy') {
         statusColor = '#FFA726';
         statusText = 'Busy / Heavy Traffic';
       }
@@ -612,9 +569,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const socialInstagramEl = document.getElementById('socialInstagram');
     const socialWhatsappEl = document.getElementById('socialWhatsapp');
     
-    if (socialFacebookEl) socialFacebookEl.href = settings.socialFacebook || '#';
-    if (socialInstagramEl) socialInstagramEl.href = settings.socialInstagram || '#';
-    if (socialWhatsappEl) socialWhatsappEl.href = settings.socialWhatsapp || '#';
+    if (socialFacebookEl) socialFacebookEl.href = safeSettings.socialFacebook;
+    if (socialInstagramEl) socialInstagramEl.href = safeSettings.socialInstagram;
+    if (socialWhatsappEl) socialWhatsappEl.href = safeSettings.socialWhatsapp;
   };
 
   // --- 9. Brand Journey Scrollytelling Controller ---

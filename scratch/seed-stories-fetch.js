@@ -4,7 +4,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const stories = [
   {
     chapter_number: 1,
-    chapter_subtitle: "Chapter I: The Founder's Vision",
+    chapter_subtitle: "Chapter I: The Brand's Vision",
     main_heading: "From A Pioneer's Vision To Your Family Table",
     image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     paragraph_1: "Founded with a passionate drive to make premium, healthy, home-style traditional breads accessible, Eatsee Food Products has grown from a humble home recipe testing setup into a state-of-the-art packaging kitchen under the steering direction of Mr. Satheeshan.",

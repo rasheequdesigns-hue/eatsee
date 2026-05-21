@@ -49,7 +49,6 @@
       <nav class="nav-menu" id="navMenu">
         <a href="#home" class="nav-link active" id="navLinkHome">Home</a>
         <a href="#brand-journey" class="nav-link" id="navLinkAbout">Our Story</a>
-        <a href="#founder" class="nav-link" id="navLinkFounder">Founder</a>
         <a href="#products" class="nav-link" id="navLinkProducts">Products</a>
         <a href="#contact" class="nav-link" id="navLinkContact">Contact Us</a>
         <a href="#contact" class="nav-cta" id="navCtaInquire">Wholesale Inquiry</a>
@@ -88,13 +87,20 @@
           </div>
         </div>
         
-        <div class="hero-visual">
-          <div class="hero-ring hero-ring-1"></div>
-          <div class="hero-ring hero-ring-2"></div>
-          <div class="hero-main-img-wrapper">
-            <img src="assets/logo.svg" alt="Eatsee Food Products" class="hero-main-img" id="heroMainImage" style="max-height: 280px; object-fit: contain; padding: 30px;">
+        <div class="hero-visual hero-visual--new">
+          <div class="hero-bg-glow" aria-hidden="true"></div>
+
+          <div class="hero-main-img-wrapper hero-main-img-wrapper--new">
+            <img src="assets/logo.svg" alt="Eatsee Food Products" class="hero-main-img" id="heroMainImage">
+            <button class="hero-cta-overlay" id="heroCtaShop">Shop Now <i class="fas fa-shopping-basket"></i></button>
           </div>
-          
+
+          <div class="hero-thumb-grid" aria-hidden="true">
+            <div class="hero-thumb" style="background-image: url('assets/products/porotta.jpg')" title="Porotta"></div>
+            <div class="hero-thumb" style="background-image: url('assets/products/pathiri.jpg')" title="Pathiri"></div>
+            <div class="hero-thumb" style="background-image: url('assets/products/chappathi.jpg')" title="Chappathi"></div>
+          </div>
+
           <!-- Decorative Floating Card -->
           <div class="hero-decor-badge">
             <div class="badge-icon">
@@ -145,31 +151,6 @@
           </div>
           <h3>Purity Standards</h3>
           <p id="standardsDesc">We pledge zero artificial preservatives, zero food coloring, and zero MSG. Every single packet is sealed using food-grade vacuum systems that locks in natural flavor, nutrition, and moisture.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- --- Founder Profile Section --- -->
-  <section class="section section-light reveal" id="founder">
-    <div class="container">
-      <div class="founder-grid">
-        <div class="founder-visual" id="storyVisualSlot">
-          <!-- JS dynamic content (Photo or Quote) populated by applySiteSettings in app.js -->
-        </div>
-        <div class="founder-content">
-          <span class="section-tag">Our Leadership</span>
-          <h2 class="founder-name" id="founderName">Mr. Satheeshan</h2>
-          <p class="founder-title" id="founderTitle">Founder, Eatsee Food Products</p>
-          
-          <div class="founder-story">
-            <p class="founder-p" id="founderStoryP1"></p>
-            <p class="founder-p" id="founderStoryP2"></p>
-          </div>
-          
-          <div class="founder-quote-box-mobile" id="founderQuoteMobileContainer" style="display: none;">
-             <p class="founder-quote-mobile" id="founderQuoteMobile"></p>
-          </div>
         </div>
       </div>
     </div>

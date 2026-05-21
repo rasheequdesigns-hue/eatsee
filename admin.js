@@ -111,13 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const set_storyMusicUrl = document.getElementById('set_storyMusicUrl');
   const musicStatus = document.getElementById('musicStatus');
   
-  const set_founderName = document.getElementById('set_founderName');
-  const set_founderTitle = document.getElementById('set_founderTitle');
-  const set_founderQuote = document.getElementById('set_founderQuote');
-  const set_founderPhoto = document.getElementById('set_founderPhoto');
-  const set_founderStoryP1 = document.getElementById('set_founderStoryP1');
-  const set_founderStoryP2 = document.getElementById('set_founderStoryP2');
-  
   const set_salesStatus = document.getElementById('set_salesStatus');
   const set_contactPhone = document.getElementById('set_contactPhone');
   const set_contactEmail = document.getElementById('set_contactEmail');
@@ -944,12 +937,6 @@ document.addEventListener('DOMContentLoaded', () => {
       journeyTitle: 'The Eatsee Brand Journey',
       journeyDesc: 'Experience the passion, pure standards, and culinary heritage behind every Eatsee recipe through our interactive chronicle.',
       storyMusicUrl: '',
-      founderName: 'Mr. Satheeshan',
-      founderTitle: 'Founder, Eatsee Food Products',
-      founderQuote: 'We wanted to preserve the delicate art of making traditional flatbreads so that no family ever has to compromise on authentic taste and purity for the sake of convenience.',
-      founderPhoto: '',
-      founderStoryP1: 'Founded with a passionate drive to make premium, healthy, home-style traditional breads accessible, Eatsee Food Products has grown from a humble home recipe testing setup into a state-of-the-art packaging kitchen under the steering direction of Mr. Satheeshan.',
-      founderStoryP2: 'Recognizing the hectic nature of modern life, our team perfected the art of pre-cooking delicate breads like flaky Porottas, paper-thin Pathiris, and steamed Noolputtus without using chemicals or artificial additives. We select only locally sourced premium flour and rice grains to produce meals that feel like they were made by your mother.',
       contactPhone: '+91 98765 43210',
       contactEmail: 'inquiry@eatseefoods.com',
       contactAddress: 'Eatsee Food Products Industrial Area, Calicut, Kerala, India',
@@ -987,13 +974,6 @@ document.addEventListener('DOMContentLoaded', () => {
         musicStatus.style.color = data.storyMusicUrl ? 'var(--color-success)' : 'var(--color-text-muted)';
       }
     }
-    
-    if (set_founderName) set_founderName.value = data.founderName || '';
-    if (set_founderTitle) set_founderTitle.value = data.founderTitle || '';
-    if (set_founderQuote) set_founderQuote.value = data.founderQuote || '';
-    if (set_founderPhoto) set_founderPhoto.value = data.founderPhoto || '';
-    if (set_founderStoryP1) set_founderStoryP1.value = data.founderStoryP1 || '';
-    if (set_founderStoryP2) set_founderStoryP2.value = data.founderStoryP2 || '';
     
     if (set_contactPhone) set_contactPhone.value = data.contactPhone || '';
     if (set_contactEmail) set_contactEmail.value = data.contactEmail || '';
@@ -1076,12 +1056,6 @@ document.addEventListener('DOMContentLoaded', () => {
         journeyTitle: set_journeyTitle.value.trim(),
         journeyDesc: set_journeyDesc.value.trim(),
         storyMusicUrl: set_storyMusicUrl.value.trim(),
-        founderName: set_founderName.value.trim(),
-        founderTitle: set_founderTitle.value.trim(),
-        founderQuote: set_founderQuote.value.trim(),
-        founderPhoto: set_founderPhoto.value.trim(),
-        founderStoryP1: set_founderStoryP1.value.trim(),
-        founderStoryP2: set_founderStoryP2.value.trim(),
         contactPhone: set_contactPhone.value.trim(),
         contactEmail: set_contactEmail.value.trim(),
         contactAddress: set_contactAddress.value.trim(),
@@ -1096,7 +1070,10 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const { error } = await supabase
           .from('site_settings')
-          .upsert({ key: 'site_content', value: updatedSettings });
+          .upsert(
+            [{ key: 'site_content', value: updatedSettings }],
+            { onConflict: 'key' }
+          );
           
         if (error) throw error;
         showToast('Global website customizations pushed live!', 'success');
